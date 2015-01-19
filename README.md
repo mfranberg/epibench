@@ -1,4 +1,4 @@
-ntroduction
+# Introduction
 
 This benchmark evaluates statistical models for inferring epistasis, or
 interaction, between geneotypes or genotype and an environmental factor.
