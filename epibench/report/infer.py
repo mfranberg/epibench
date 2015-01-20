@@ -22,6 +22,8 @@ def num_significant_bonferroni(output_path, column, alpha, num_tests):
 
         threshold = alpha
         if num_tests == 0:
+            if len( values ) <= 0:
+                return [ ]
             threshold = alpha / len( values )
         else:
             threshold = alpha / num_tests

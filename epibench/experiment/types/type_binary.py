@@ -27,7 +27,7 @@ class BinaryExperiment:
 
     def write_results(self, method_results, result_file):
         for name, significant in method_results:
-            result_file.write( "{0}\t\"{1}\"\t{2}".format( self.params_str( ), name, len( significant ) ) )
+            result_file.write( "{0}\t\"{1}\"\t{2}\n".format( self.params_str( ), name, len( significant ) ) )
 
         return method_results
         
