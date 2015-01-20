@@ -3,5 +3,11 @@
     {
         "name" : "Logistic",
         "method" : "glm"
+    },
+    "closed" :
+    {
+        "name" : "Stage-wise",
+        "method" : "closed",
+        "num-tests" : [ 100000, 10000, 10000, 100 ]
     }
 }

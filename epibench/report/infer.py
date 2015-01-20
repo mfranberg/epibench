@@ -27,3 +27,9 @@ def num_significant_bonferroni(output_path, column, alpha, num_tests):
             threshold = alpha / num_tests
 
         return filter( lambda x: x[ 2 ] <= threshold, values )
+
+def num_significant_threshold(output_path, column, threshold):
+    with open( output_path, "r" ) as output_file:
+        values = read_significance_value_from_file( output_file, column )
+
+        return filter( lambda x: x[ 2 ] <= threshold, values )
