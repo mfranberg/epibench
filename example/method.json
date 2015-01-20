@@ -1,0 +1,7 @@
+{
+    "logistic" :
+    {
+        "name" : "Logistic",
+        "method" : "glm"
+    }
+}

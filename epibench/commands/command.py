@@ -26,12 +26,12 @@ class ComplexCLI( click.MultiCommand ):
                 name = name.encode( "ascii", "replace" )
 
             cmd_dir, sep, cmd_name = name.partition( "-" )
-            mod_name = "epigen.commands.{0}.cmd_{1}".format( cmd_dir, cmd_name )
-            mod = __import__( mod_name, None, None, [ "epigen" ] )
-        except ImportError:
+            mod_name = "epibench.commands.{0}.cmd_{1}".format( cmd_dir, cmd_name )
+            mod = __import__( mod_name, None, None, [ "epibench" ] )
+        except ValueError:#ImportError:
             return
 
-        return mod.epigen
+        return mod.epibench
 
 class CommandWithHelp(click.Command):
     """A Command subclass that adds the help automatically.
