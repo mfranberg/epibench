@@ -2,12 +2,31 @@
     "logistic" :
     {
         "name" : "Logistic",
-        "method" : "glm"
+        "method" : "glm",
+        "num-tests" : 100000
     },
     "closed" :
     {
         "name" : "Stage-wise",
         "method" : "closed",
         "num-tests" : [ 100000, 10000, 10000, 100 ]
+    },
+    "scaleinv" :
+    {
+        "name" : "ScaleInvariance",
+        "method" : "scaleinv",
+        "num-tests" : [ 100000, 0, 0, 0 ]
+    },
+    "loglinear" :
+    {
+        "name" : "Log-linear",
+        "method" : "loglinear",
+        "num-tests" : 100000
+    },
+    "marchini" :
+    {
+        "name" : "Marchini",
+        "method" : "marchini",
+        "num-tests" : 100000
     }
 }
