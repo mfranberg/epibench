@@ -10,7 +10,7 @@ def json_file(path):
     with open( path, "r" ) as jf:
         return json.load( jf )
 
-@click.command( "fwer", cls = CommandWithHelp, short_help = "Compute power for the given methods." )
+@click.command( "fwer", cls = CommandWithHelp, short_help = "Estimate FWER for the given methods." )
 @click.option( "--methods", type = str, help = "A comma-separated list of methods to run (default is to run all).", default = None )
 @click.option( "--method-file", type = json_file, help = "A json-file describing which and how to run the methods.", default = None )
 @click.option( "--experiment-file", type = json_file, help = "A json-file describing the experiments to run.", required = True )
