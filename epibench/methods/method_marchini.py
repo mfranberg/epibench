@@ -23,6 +23,10 @@ def find_significant(method_params, input_files, output_dir):
             "--bfile", input_files.plink_prefix,
             "--silent",
             "--model", "--out", step1_path ]
+
+    if input_files.pheno_path:
+        cmd.extend( [ "--pheno", input_files.pheno_path ] )
+
     subprocess.check_call( cmd, stdout = open( os.devnull, "w" ) )
 
     step1_alpha = method_params.get( "step1-alpha", 0.10 )
@@ -63,6 +67,9 @@ def find_significant(method_params, input_files, output_dir):
             "-l", "logistic",
             new_pairs,
             input_files.plink_prefix ]
+
+    if input_files.pheno_path:
+        cmd.extend( [ "-p", input_files.pheno_path ] )
 
     subprocess.check_call( cmd, stdout = output_file )
  

@@ -30,6 +30,9 @@ def find_significant(method_params, input_files, output_dir):
 
     if input_files.cov_path:
         cmd.extend( [ "-c", input_files.cov_path ] )
+
+    if input_files.pheno_path:
+        cmd.extend( [ "-p", input_files.pheno_path ] )
     
     print " ".join( cmd )
     

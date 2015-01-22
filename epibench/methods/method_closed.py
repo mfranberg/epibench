@@ -30,6 +30,9 @@ def find_significant(method_params, input_files, output_dir):
             input_files.pair_path,
             input_files.plink_prefix ]
 
+    if input_files.pheno_path:
+        cmd.extend( [ "-p", input_files.pheno_path ] )
+
     print " ".join( cmd )
     subprocess.call( cmd, stdout = step1_file )
     step1_file.close( )

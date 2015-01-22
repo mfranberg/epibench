@@ -1,7 +1,9 @@
 from itertools import product
 import subprocess
+import os
 
 from epibench.util.grouper import grouper
+from epibench.util.heritability import heritability
 from epibench.experiment.inputfiles import InputFiles
 
 class BinaryExperiment:
@@ -11,7 +13,8 @@ class BinaryExperiment:
         self.params = params
         self.num_pairs = num_pairs
 
-    def generate_data(self, plink_prefix):
+    def generate_data(self, output_dir, input_plink = None):
+        plink_prefix = os.path.join( output_dir, "plink" )
         cmd = [ "epigen", "pair-single",
                 "--maf", str( self.maf[ 0 ] ), str( self.maf[ 1 ] ),
                 "--sample-size", str( self.sample_size[ 0 ] ), str( self.sample_size[ 1 ] ),
@@ -32,10 +35,11 @@ class BinaryExperiment:
         return method_results
         
     def header(self):
-        return "maf1\tmaf2\tncases\tncontrols\tnpairs\tmethod\tnum_significant\n"
+        return "heritability\tmaf1\tmaf2\tncases\tncontrols\tnpairs\tmethod\tnum_significant\n"
 
     def params_str(self):
-        return "{0}\t{1}\t{2}\t{3}\t{4}".format(
+        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}".format(
+                heritability( self.params, self.maf ),
                 self.maf[ 0 ],
                 self.maf[ 1 ],
                 self.sample_size[ 0 ],
