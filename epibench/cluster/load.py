@@ -1,11 +1,9 @@
 import imp
 
-def load_cluster(path):
-    print path
+def load_cluster(cluster_arg):
+    path = cluster_arg[ 0 ]
+    param_str = cluster_arg[ 1 ]
+
     mod = imp.load_source( "cluster", path )
 
-    assert mod.num_cores != None
-    assert mod.submit != None
-
-
-    return mod
+    return mod.ClusterDispatcher( param_str )

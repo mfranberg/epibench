@@ -1,7 +1,11 @@
 import subprocess
 
-def num_cores():
-    return 2
+class ClusterDispatcher:
+    def __init__(self, param_str):
+        self.ncores = int( param_str )
 
-def submit(cmd):
-    subprocess.check_call( cmd )
+    def num_cores(self):
+        return self.ncores
+
+    def submit(self, cmd):
+        subprocess.check_call( cmd )
