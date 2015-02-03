@@ -45,7 +45,8 @@ def run_experiments(experiment_json, method_list, output_dir, plink_path = None,
     if not cluster:
         run_experiment_list( experiment_list, method_list, output_dir, plink_path )
     else:
-        per_core_experiment = grouper( cluster.num_cores( ), experiment_list )
+        experiments_per_block = ( len( experiment_list ) + cluster.num_cores( ) - 1 ) / cluster.num_cores( )
+        per_core_experiment = grouper( experiments_per_block, experiment_list )
 
         for core_id, core_experiment_list in enumerate( per_core_experiment ):
             core_output_dir = os.path.join( output_dir, "batch{0}".format( core_id ) )
