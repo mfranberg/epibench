@@ -30,12 +30,12 @@ class BinaryExperiment:
 
     def write_results(self, method_results, result_file):
         for name, significant in method_results:
-            result_file.write( "{0}\t\"{1}\"\t{2}\n".format( self.params_str( ), name, len( significant ) ) )
+            result_file.write( "{0}\t\"{1}\"\t{2}\t{3}\n".format( self.params_str( ), name, significant[ 1 ], len( significant[ 0 ] ) ) )
 
         return method_results
         
     def header(self):
-        return "heritability\tmaf1\tmaf2\tncases\tncontrols\tnpairs\tmethod\tnum_significant\n"
+        return "heritability\tmaf1\tmaf2\tncases\tncontrols\tnpairs\tmethod\tnum_missing\tnum_significant\n"
 
     def params_str(self):
         return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}".format(

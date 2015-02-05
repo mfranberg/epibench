@@ -26,7 +26,7 @@ class BinaryFwerExperiment:
 
     def write_results(self, method_results, result_file):
         for name, significant in method_results:
-            result_file.write( "{0}\t{1}\t\"{2}\"\t{3}\n".format( self.replicate, self.effect_level, name, len( significant ) ) )
+            result_file.write( "{0}\t{1}\t\"{2}\"\t{3}\n".format( self.replicate, self.effect_level, name, len( significant[ 0 ] ) ) )
 
         return method_results
         

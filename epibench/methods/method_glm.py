@@ -41,6 +41,6 @@ def find_significant(method_params, input_files, output_dir):
         subprocess.call( cmd, stdout = output_file )
     
     alpha = method_params.get( "alpha", 0.05 )
-    num_tests = method_params.get( "num_tests", 0 )
+    num_tests = method_params.get( "num-tests", 0 )
 
     return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )

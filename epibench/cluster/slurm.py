@@ -14,7 +14,7 @@ class ClusterDispatcher:
         return self.ncores
 
     def submit(self, cmd):
-        SUBMIT_SCRIPT = "#!/bin/bash -l\n{0}\n"
+        SUBMIT_SCRIPT = "#!/bin/bash -l\nmodule add python/2.7.4\n{0}\n"
         script_file, script_path = tempfile.mkstemp( )
         with open( script_path, "w" ) as script_file:
             script_file.write( SUBMIT_SCRIPT.format( " ".join( cmd ) ) )

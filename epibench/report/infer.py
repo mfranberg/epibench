@@ -1,24 +1,27 @@
+from collections import defaultdict
 
-def read_significance_value_from_file(csv_file, column):
-    csv_file.seek( 0 )
+def read_significance_value_from_file(csv_file, column, missing = "NA"):
+    num_missing = 0
     value_list = list( )
     for line in csv_file:
         column_list = line.strip( ).split( )
 
-        value = 0.0
-        try:
-            value =  float( column_list[ column ] )
-        except:
-            continue
+        if column_list[ column ] != missing:
+            value = 0.0
+            try:
+                value =  float( column_list[ column ] )
+            except:
+                continue
 
-        if value >= 0.0 and value <= 1.0:
             value_list.append( ( column_list[ 0 ], column_list[ 1 ], value ) )
+        else:
+            num_missing += 1
 
-    return value_list
+    return value_list, num_missing
 
-def num_significant_bonferroni(output_path, column, alpha, num_tests):
+def num_significant_bonferroni(output_path, column, alpha, num_tests, missing = "NA"):
     with open( output_path, "r" ) as output_file:
-        values = read_significance_value_from_file( output_file, column )
+        values, num_missing = read_significance_value_from_file( output_file, column )
 
         threshold = alpha
         if num_tests == 0:
@@ -28,10 +31,35 @@ def num_significant_bonferroni(output_path, column, alpha, num_tests):
         else:
             threshold = alpha / num_tests
 
-        return filter( lambda x: x[ 2 ] <= threshold, values )
+        return filter( lambda x: x[ 2 ] <= threshold, values ), num_missing
 
-def num_significant_threshold(output_path, column, threshold):
+def num_significant_threshold(output_path, column, threshold, missing = "NA"):
     with open( output_path, "r" ) as output_file:
-        values = read_significance_value_from_file( output_file, column )
+        values, num_missing = read_significance_value_from_file( output_file, column )
 
-        return filter( lambda x: x[ 2 ] <= threshold, values )
+        return filter( lambda x: x[ 2 ] <= threshold, values ), num_missing
+
+def num_significant_multiple(output_path, valid_columns, threshold, min_valid):
+    value_list = list( )
+    num_missing = 0
+    with open( output_path, "r" ) as output_file:
+        for line in output_file:
+            column_list = line.strip( ).split( )
+            
+            row = [ ]
+            for column in valid_columns:
+                value = 0.0
+                try:
+                    value =  float( column_list[ column ] )
+                except:
+                    continue
+
+                row.append( value )
+
+            if len( row ) >= min_valid:
+                value_list.append( ( column_list[ 0 ], column_list[ 1 ], max( row ) ) )
+            else:
+                num_missing += 1
+
+    return filter( lambda x: x[ 2 ] <= threshold, value_list ), num_missing
+

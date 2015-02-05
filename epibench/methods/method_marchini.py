@@ -45,7 +45,7 @@ def find_significant(method_params, input_files, output_dir):
 
             try:
                 pvalue = float( column[ 9 ] )
-                if pvalue < 0.10:
+                if pvalue < step1_alpha:
                     significant.add( column[ 1 ] )
             except:
                 continue
@@ -73,4 +73,5 @@ def find_significant(method_params, input_files, output_dir):
 
     subprocess.check_call( cmd, stdout = output_file )
  
-    return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )
+    expected_num_tests = int( step1_alpha * num_tests + 1 ) * ( int( step1_alpha * num_tests + 1 ) - 1 ) / 2
+    return infer.num_significant_bonferroni( output_path, 3, alpha, expected_num_tests )

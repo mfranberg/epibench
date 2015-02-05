@@ -18,7 +18,7 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, input_files, output_dir):
-    num_tests = method_params.get( "num_tests", [ 0, 0, 0, 0 ] )
+    num_tests = method_params.get( "num-tests", [ 0, 0, 0, 0 ] )
     alpha = method_params.get( "alpha", 0.05 )
     weight = method_params.get( "weight", [ 0.25, 0.25, 0.25, 0.25 ] )
     
@@ -54,4 +54,4 @@ def find_significant(method_params, input_files, output_dir):
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
     
-    return infer.num_significant_threshold( output_path, 7, alpha )
+    return infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha, 3 )
