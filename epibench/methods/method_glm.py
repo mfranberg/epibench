@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import os
 
@@ -34,7 +35,7 @@ def find_significant(method_params, input_files, output_dir):
     if input_files.pheno_path:
         cmd.extend( [ "-p", input_files.pheno_path ] )
     
-    print " ".join( cmd )
+    logging.info( " ".join( cmd ) )
     
     output_path = os.path.join( output_dir, "bayesic.out" )
     with open( output_path, "w" ) as output_file:

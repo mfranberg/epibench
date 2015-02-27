@@ -12,7 +12,7 @@ import sys
 #
 def find_methods(method_json, include_methods = None):
     method_funcs = [ ]
-    for params in method_json.itervalues( ):
+    for params in method_json[ "methods" ]:
         name = params[ "method" ]
         if include_methods and not name in include_methods:
             continue

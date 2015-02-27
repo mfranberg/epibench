@@ -21,7 +21,7 @@ class BinaryExperiment:
                 "--npairs", str( self.num_pairs ),
                 "--out", plink_prefix ]
         
-        cmd.append( "--model" )
+        cmd.append( "--penetrance" )
         cmd.extend( list( map( str, self.params ) ) )
 
         subprocess.call( cmd )

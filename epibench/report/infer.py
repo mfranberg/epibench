@@ -39,7 +39,7 @@ def num_significant_threshold(output_path, column, threshold, missing = "NA"):
 
         return filter( lambda x: x[ 2 ] <= threshold, values ), num_missing
 
-def num_significant_multiple(output_path, valid_columns, threshold, min_valid):
+def num_significant_multiple(output_path, valid_columns, threshold, min_valid, missing = "NA"):
     value_list = list( )
     num_missing = 0
     with open( output_path, "r" ) as output_file:
@@ -47,7 +47,11 @@ def num_significant_multiple(output_path, valid_columns, threshold, min_valid):
             column_list = line.strip( ).split( )
             
             row = [ ]
+            is_missing = False
             for column in valid_columns:
+                if column_list[ column ] == missing:
+                    is_missing = True
+
                 value = 0.0
                 try:
                     value =  float( column_list[ column ] )
@@ -58,7 +62,7 @@ def num_significant_multiple(output_path, valid_columns, threshold, min_valid):
 
             if len( row ) >= min_valid:
                 value_list.append( ( column_list[ 0 ], column_list[ 1 ], max( row ) ) )
-            else:
+            elif is_missing:
                 num_missing += 1
 
     return filter( lambda x: x[ 2 ] <= threshold, value_list ), num_missing

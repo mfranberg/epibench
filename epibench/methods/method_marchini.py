@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import os
 
@@ -52,26 +53,26 @@ def find_significant(method_params, input_files, output_dir):
 
     # Write the pairs to run
     new_pairs = os.path.join( output_dir, "significant_pairs.out" )
-    new_pairs_file = open( new_pairs, "w" )
-    for line in open( input_files.pair_path ):
-        snp1, snp2 = line.strip( ).split( )
-        if snp1 in significant or snp2 in significant:
-            new_pairs_file.write( line )
+    with open( new_pairs, "w" ) as new_pairs_file:
+        for line in open( input_files.pair_path ):
+            snp1, snp2 = line.strip( ).split( )
+            if snp1 in significant or snp2 in significant:
+                new_pairs_file.write( line )
 
     # Perform logistic regression on the remaining pairs
-    output_path = os.path.join( output_dir, "marchini.out" )
-    output_file = open( output_path, "w" )
     cmd = [ "bayesic",
-            "-m", "glm",
-            "-f", "factor",
-            "-l", "logistic",
+            "-m", "wald",
             new_pairs,
             input_files.plink_prefix ]
 
     if input_files.pheno_path:
         cmd.extend( [ "-p", input_files.pheno_path ] )
 
-    subprocess.check_call( cmd, stdout = output_file )
+    logging.info( " ".join( cmd ) )
+
+    output_path = os.path.join( output_dir, "marchini.out" )
+    with open( output_path, "w" ) as output_file:
+        subprocess.check_call( cmd, stdout = output_file )
  
     expected_num_tests = int( step1_alpha * num_tests + 1 ) * ( int( step1_alpha * num_tests + 1 ) - 1 ) / 2
     return infer.num_significant_bonferroni( output_path, 3, alpha, expected_num_tests )

@@ -17,7 +17,7 @@ class BinaryFwerExperiment:
                 "--out", pheno_path,
                 input_plink ]
         
-        cmd.append( "--model" )
+        cmd.append( "--penetrance" )
         cmd.extend( list( map( str, self.params ) ) )
 
         subprocess.call( cmd )

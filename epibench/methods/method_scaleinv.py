@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import os
 
@@ -31,7 +32,7 @@ def find_significant(method_params, input_files, output_dir):
     cmd.append( "--num-tests" )
     cmd.extend( map( str, num_tests ) )
 
-    print " ".join( cmd )
+    logging.info( " ".join( cmd ) )
     output_path = os.path.join( output_dir, "bayesic.out" )
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )

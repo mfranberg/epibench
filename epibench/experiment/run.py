@@ -1,5 +1,6 @@
 import cPickle
 import os
+import logging
 from functools import partial
 
 from epibench.util.dirhandle import setup_file, setup_dir
@@ -25,6 +26,9 @@ def run_methods(method_list, input_files, output_dir):
 
 def run_experiment_list(experiment_list, method_list, output_dir, plink_path = None):
     data_dir = setup_dir( output_dir, "data", "" )
+
+    log_path = os.path.join( output_dir, "experiment.log" )
+    logging.basicConfig( filename=log_path, format='%(levelname)s %(asctime)s %(message)s', level=logging.DEBUG )
 
     started_experiments = set( )
     result_file = None
