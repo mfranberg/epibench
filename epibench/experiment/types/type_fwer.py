@@ -54,7 +54,7 @@ def param_iter(experiment):
     
     params = grouper( 9, experiment.get( "param" ) )
     dispersion = experiment.get( "dispersion", [ 1.0 ] )
-    effect_params = zip( params, range( len( experiment.get( "param" ) ) / 9 ) )
+    effect_params = range( len( experiment.get( "param" ) ) / 9 )
 
     num_replicates = experiment.get( "replicates", 100 )
  

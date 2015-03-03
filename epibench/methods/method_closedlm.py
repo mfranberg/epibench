@@ -23,11 +23,11 @@ def find_significant(method_params, input_files, output_dir):
     alpha = method_params.get( "alpha", 0.05 )
     weight = method_params.get( "weight", [ 0.25, 0.25, 0.25, 0.25 ] )
     
-    step1_path = os.path.join( output_dir, "bayesic.out" )
+    step1_path = os.path.join( output_dir, "bayesiclm.out" )
     step1_file = open( step1_path, "w" )
     
     cmd = [ "bayesic",
-            "-m", "stepwise",
+            "-m", "lm-stepwise",
             input_files.pair_path,
             input_files.plink_prefix ]
 
@@ -39,6 +39,7 @@ def find_significant(method_params, input_files, output_dir):
     step1_file.close( )
  
     cmd =[ "bayesic-correct",
+           "--use-lm",
            "--alpha", str( alpha ),
            step1_path,
            input_files.plink_prefix
@@ -51,7 +52,7 @@ def find_significant(method_params, input_files, output_dir):
     cmd.extend( map( str, num_tests ) )
 
     logging.info( " ".join( cmd ) )
-    output_path = os.path.join( output_dir, "bayesic.out.final" )
+    output_path = os.path.join( output_dir, "bayesiclm.out.final" )
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
     
