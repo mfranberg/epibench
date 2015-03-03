@@ -1,6 +1,7 @@
 {
     "models" : [
         {
+            "model" : "binomial",
             "type" : "fwer",
             "replicates" : 3,
             "param" : [ 

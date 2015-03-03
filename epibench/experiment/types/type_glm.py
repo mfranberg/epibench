@@ -78,14 +78,14 @@ def param_iter(experiment):
         sample_size = zip( s, [ 0 ] * len( s ) )
 
     # Experiment could either be mean value or beta
+    link = None
+    params = None
     if "beta" in experiment:
         link = experiment.get( "link", "default" )
         beta = grouper( 9, experiment.get( "beta" ) )
-        
-        for m, s, p, d, l in product( maf, sample_size, beta, dispersion, link ):
-            yield GLMExperiment( m, s, model, p, d, num_pairs, l )
     else:
         params = grouper( 9, experiment.get( "param" ) )
-        for m, s, p, d in product( maf, sample_size, params, dispersion ):
-            yield GLMExperiment( m, s, model, p, d, num_pairs )
+    
+    for m, s, p, d, l in product( maf, sample_size, params, dispersion, link ):
+        yield GLMExperiment( m, s, model, p, d, num_pairs, l )
 

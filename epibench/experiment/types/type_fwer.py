@@ -5,20 +5,36 @@ import os
 from epibench.util.grouper import grouper
 from epibench.experiment.inputfiles import InputFiles
 
-class BinaryFwerExperiment:
-    def __init__(self, params, effect_level, replicate):
+class GLMFwerExperiment:
+    def __init__(self, model, params, dispersion, effect_level, replicate, link = None):
+        self.model = model
         self.params = params
+        self.dispersion = dispersion
         self.effect_level = effect_level
         self.replicate = replicate
-
-    def generate_data(self, output_dir, input_plink):
+        self.link = link
+ 
+    def generate_data(self, output_dir, input_plink = None):
         pheno_path = os.path.join( output_dir, "fwer.pheno" )
-        cmd = [ "epigen", "pheno-binary",
+
+        cmd_type = "pheno-general"
+        if self.link:
+            cmd_type = "pheno-glm"
+
+        cmd = [ "epigen", cmd_type,
+                "--model", self.model,
+                "--dispersion", str( self.dispersion ),
                 "--out", pheno_path,
                 input_plink ]
         
-        cmd.append( "--penetrance" )
-        cmd.extend( list( map( str, self.params ) ) )
+        if self.link:
+            cmd.append( "--beta" )
+            cmd.extend( list( map( str, self.params ) ) )
+            cmd.append( "--link" )
+            cmd.append( self.link )
+        else:
+            cmd.append( "--mu" )
+            cmd.extend( list( map( str, self.params ) ) )
 
         subprocess.call( cmd )
 
@@ -34,12 +50,23 @@ class BinaryFwerExperiment:
         return "replicate\teffect_level\tmethod_name\tnum_significant\n"
 
 def param_iter(experiment):
+    model = experiment.get( "model", "binomial" )
+    
     params = grouper( 9, experiment.get( "param" ) )
+    dispersion = experiment.get( "dispersion", [ 1.0 ] )
     effect_params = zip( params, range( len( experiment.get( "param" ) ) / 9 ) )
 
     num_replicates = experiment.get( "replicates", 100 )
-
-    for ep, replicate in product( effect_params, range( num_replicates ) ):
-        yield BinaryFwerExperiment( ep[ 0 ], ep[ 1 ], replicate )
-        
-
+ 
+    # Experiment could either be mean value or beta
+    link = [ None ]
+    params = None
+    if "beta" in experiment:
+        link = experiment.get( "link", "default" )
+        beta = grouper( 9, experiment.get( "beta" ) )
+    else:
+        params = grouper( 9, experiment.get( "param" ) )
+    
+    for e, p, d, l in product( effect_params, params, dispersion, link ):
+        for replicate in range( num_replicates ):
+            yield GLMFwerExperiment( model, p, d, e, replicate, l )
