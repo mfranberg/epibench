@@ -1,7 +1,8 @@
 {
     "models" : [
         {
-            "type" : "binary",
+            "type" : "glm",
+            "model" : "binomial",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 2000, 3000, 3000, 4000, 4000 ],
             "num-pairs" : 200,
@@ -24,7 +25,8 @@
             ]
         },
         {
-            "type" : "binary",
+            "type" : "glm",
+            "model" : "binomial",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 2000, 3000, 3000, 4000, 4000 ],
             "num-pairs" : 200,
@@ -47,7 +49,8 @@
             ]
         },
         {
-            "type" : "binary",
+            "type" : "glm",
+            "model" : "binomial",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 2000, 3000, 3000, 4000, 4000 ],
             "num-pairs" : 200,
@@ -70,7 +73,8 @@
             ]
         },
         {
-            "type" : "binary",
+            "type" : "glm",
+            "model" : "binomial",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 2000, 3000, 3000, 4000, 4000 ],
             "num-pairs" : 200,

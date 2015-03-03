@@ -1,26 +1,24 @@
 {
-    "closed" :
-    {
-        "name" : "Stage-wise",
-        "method" : "closed",
-        "num-tests" : [ 1000000000000, 1000000, 1000000, 1 ]
-    },
-    "scaleinv" :
-    {
-        "name" : "ScaleInvariance",
-        "method" : "scaleinv",
-        "num-tests" : [ 1000000000000, 0, 0, 0 ]
-    },
-    "loglinear" :
-    {
-        "name" : "Log-linear",
-        "method" : "loglinear",
-        "num-tests" : 1000000000000
-    },
-    "marchini" :
-    {
-        "name" : "Marchini",
-        "method" : "marchini",
-        "num-tests" : 1000000
-    }
+    "methods" : [
+        {
+            "name" : "Stage-wise",
+            "method" : "closed",
+            "num-tests" : [ 1000000000000, 1000000, 1000000, 1 ]
+        },
+        {
+            "name" : "ScaleInvariance",
+            "method" : "scaleinv",
+            "num-tests" : [ 1000000000000, 0, 0, 0 ]
+        },
+        {
+            "name" : "Log-linear",
+            "method" : "loglinear",
+            "num-tests" : 1000000000000
+        },
+        {
+            "name" : "Marchini",
+            "method" : "marchini",
+            "num-tests" : 1000000
+        }
+    ]
 }

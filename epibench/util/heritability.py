@@ -2,12 +2,14 @@
 ##
 # Computes the heritability V(P|G) / V(P).
 #
-# @param penetrance The probability of disease for each genotype as a vector.
+# @param model The type of model used (normal, binomial, poisson etc)
+# @param mu The mean value for each genotype.
 # @param maf The minor allele frequency for both locus.
+# @param dispersion The dispersion parameter if applicable.
 #
 # @return The heritability.
 #
-def heritability(penetrance, maf):
+def heritability(model, mu, maf, dispersion):
     p = [ ( 1 - maf[ 0 ] )**2, 2 * maf[ 0 ] * ( 1 - maf[ 0 ] ), ( maf[ 0 ] )**2 ]
     q = [ ( 1 - maf[ 1 ] )**2, 2 * maf[ 1 ] * ( 1 - maf[ 1 ] ), ( maf[ 1 ] )**2 ]
 
@@ -15,12 +17,15 @@ def heritability(penetrance, maf):
                    p[ 1 ] * q[ 0 ], p[ 1 ] * q[ 1 ], p[ 1 ] * q[ 2 ],
                    p[ 2 ] * q[ 0 ], p[ 2 ] * q[ 1 ], p[ 2 ] * q[ 2 ] ]
 
-    pop_p = sum( p * m for p, m in zip( penetrance, joint_maf ) )
+    pop_mu = sum( m * f for m, f in zip( mu, joint_maf ) )
+    h_numerator = sum( f * m**2 for m, f in zip( mu, joint_maf ) ) - pop_mu**2
 
-    h = 0.0
-    for i in range( 3 ):
-        for j in range( 3 ):
-            cell = 3 * i + j
-            h += ( penetrance[ cell ] - pop_p )**2 * joint_maf[ cell ]
+    h_denominator = h_numerator
+    if model == "binomial":
+        h_denominator += sum( m*(1-m) * f for m, f in zip( mu, joint_maf ) )
+    elif model == "poisson":
+        h_denominator += pop_mu
+    else:
+        h_denominator += sum( d**2 * f for d, f in zip( [ dispersion ] * 9, joint_maf ) )
 
-    return h / ( pop_p * ( 1 - pop_p ) )
+    return h_numerator / h_denominator
