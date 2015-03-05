@@ -1,0 +1,14 @@
+{
+    "methods" : [
+        {
+            "name" : "Stage-wise LM",
+            "method" : "closedlm",
+            "num-tests" : [ 1000000000000, 1000000, 1000000, 1 ]
+        },
+        {
+            "name" : "Linear Regression",
+            "method" : "waldlm",
+            "num-tests" : 1000000000000
+        }
+    ]
+}
