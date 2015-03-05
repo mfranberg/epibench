@@ -14,6 +14,7 @@ output_file = argv[ 2 ]
 
 method_power = read.table( power_file, header = TRUE )
 method_power$power = method_power$num_significant / ( method_power$npairs - method_power$num_missing )
+method_power$power[ method_power$num_missing == method_power$npairs ] = 0.0
 
 pdf( output_file, width = 2 * 6.7, height = 2 * 6.7 / 1.618 )
 

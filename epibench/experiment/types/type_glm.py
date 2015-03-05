@@ -1,6 +1,7 @@
 from itertools import product
 import subprocess
 import os
+import logging
 
 from epibench.util.grouper import grouper
 from epibench.util.heritability import heritability
@@ -40,6 +41,7 @@ class GLMExperiment:
             cmd.append( "--mu" )
             cmd.extend( list( map( str, self.params ) ) )
 
+        logging.info( " ".join( cmd ) )
         subprocess.call( cmd )
 
         return InputFiles( plink_prefix, plink_prefix + ".pair" )
@@ -78,7 +80,7 @@ def param_iter(experiment):
         sample_size = zip( s, [ 0 ] * len( s ) )
 
     # Experiment could either be mean value or beta
-    link = None
+    link = [None]
     params = None
     if "beta" in experiment:
         link = experiment.get( "link", "default" )
