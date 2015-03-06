@@ -1,15 +1,9 @@
 import click
-import json
 
 from epibench.commands.command import CommandWithHelp
 from epibench.experiment.compile import compile_experiments
 
-def json_file(path):
-    with open( path, "r" ) as jf:
-        return json.load( jf )
-
-@click.command( "compile", cls = CommandWithHelp, short_help = "Create plots and tables for the given experiment." )
-@click.option( "--experiment-file", type = json_file, help = "A json-file describing the experiments to run.", required = True )
-@click.option( "--input-dir", type = click.Path( exists = True ), help = "The output directory of the run.", required = True )
-def epibench(experiment_file, input_dir):
-    compile_experiments( experiment_file, input_dir )
+@click.command( "compile", cls = CommandWithHelp, short_help = "Create plots and tables for an experiment that has been run." )
+@click.argument( "input_dir", type = click.Path( exists = True ), required = True )
+def epibench(input_dir):
+    compile_experiments( input_dir )

@@ -1,4 +1,5 @@
 from itertools import product
+import logging
 import subprocess
 import os
 
@@ -35,6 +36,8 @@ class GLMFwerExperiment:
         else:
             cmd.append( "--mu" )
             cmd.extend( list( map( str, self.params ) ) )
+
+        logging.info( " ".join( cmd ) )
 
         subprocess.call( cmd )
 

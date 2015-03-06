@@ -1,6 +1,7 @@
 import cPickle
 import os
 import logging
+import json
 from functools import partial
 
 from epibench.util.dirhandle import setup_file, setup_dir
@@ -45,6 +46,10 @@ def run_experiment_list(experiment_list, method_list, output_dir, plink_path = N
         experiment.write_results( method_results, result_file )
 
 def run_experiments(experiment_json, method_list, output_dir, plink_path = None, cluster = None):
+    json_path = setup_file( output_dir, "", "experiments.json" )
+    with open( json_path, "w" ) as json_file:
+        json.dump( experiment_json, json_file )
+
     experiment_list = list( walk_experiments( experiment_json ) )
     if not cluster:
         run_experiment_list( experiment_list, method_list, output_dir, plink_path )

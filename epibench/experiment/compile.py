@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import subprocess
 from collections import defaultdict
@@ -37,26 +38,41 @@ def plot(result_path, plot_path):
             plot_path
     ]
     
-    print " ".join( cmd )
     subprocess.check_call( cmd )
 
-def plot_results(result_dir, plot_dir):
-    result_files = glob.glob( os.path.join( result_dir, "*.out" ) )
-    for r in result_files:
-        basename = os.path.basename( r )
-        prefix = os.path.splitext( basename )[ 0 ]
-        plot_path = os.path.join( plot_dir, prefix + ".pdf" )
-        plot( r, plot_path )
+def tabulate(result_path, table_path):
+    cmd = [ "Rscript",
+            resource_filename( "epibench.external", "table_fwer.r" ),
+            result_path,
+            table_path
+            ]
 
-def compile_experiments(experiments, input_dir):
+    subprocess.check_call( cmd )
+
+def compile_results(experiments, result_dir, final_dir):
+    for i, e in enumerate( experiments ):
+        result_path = os.path.join( result_dir, "experiment{0}.out".format( i ) )
+
+        if e[ "type" ] == "glm":
+            plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
+            plot( result_path, plot_path )
+        elif e[ "type" ] == "fwer":
+            table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
+            tabulate( result_path, table_path )
+
+def compile_experiments(input_dir):
+    experiments = [ ]
+    with open( os.path.join( input_dir, "experiments.json" ), "r" ) as experiment_file:
+        experiments = json.load( experiment_file )
+
     result_dir = os.path.join( input_dir, "result" )
-    batch_dirs = glob.glob( os.path.join( input_dir, "batch*/result/*.out" ) )
+    batch_dirs = glob.glob( os.path.join( input_dir, "batch*", "result", "*.out" ) )
     if len( batch_dirs ) > 0:
         grouped_results = group_result( batch_dirs )
         mkdir_p( result_dir )
         merge_results( grouped_results, result_dir )
 
-    plot_dir = os.path.join( input_dir, "plot" )
-    mkdir_p( plot_dir ) 
-    plot_results( result_dir, plot_dir )
+    final_dir = os.path.join( input_dir, "final" )
+    mkdir_p( final_dir )
 
+    compile_results( experiments[ "models" ], result_dir, final_dir )
