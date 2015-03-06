@@ -1,7 +1,7 @@
 {
-    "models" : [
+    "experiments" : [
         {
-            "type" : "glm",
+            "type" : "geno",
             "model" : "normal",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 3000, 4000 ],
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "type" : "glm",
+            "type" : "geno",
             "model" : "normal",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 3000, 4000 ],
@@ -41,7 +41,7 @@
             ]
         },
         {
-            "type" : "glm",
+            "type" : "geno",
             "model" : "normal",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 3000, 4000 ],
@@ -61,7 +61,7 @@
             ]
         },
         {
-            "type" : "glm",
+            "type" : "geno",
             "model" : "normal",
             "maf" : [ 0.2, 0.2, 0.3, 0.3, 0.4, 0.4 ],
             "sample-size" : [ 2000, 3000, 4000 ],

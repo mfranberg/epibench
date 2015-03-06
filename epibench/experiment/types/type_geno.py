@@ -7,7 +7,7 @@ from epibench.util.grouper import grouper
 from epibench.util.heritability import heritability
 from epibench.experiment.inputfiles import InputFiles
 
-class GLMExperiment:
+class GenoExperiment:
     def __init__(self, maf, sample_size, model, params, dispersion, num_pairs, link = None):
         self.maf = maf
         self.sample_size = sample_size
@@ -89,5 +89,5 @@ def param_iter(experiment):
         params = grouper( 9, experiment.get( "param" ) )
     
     for m, s, p, d, l in product( maf, sample_size, params, dispersion, link ):
-        yield GLMExperiment( m, s, model, p, d, num_pairs, l )
+        yield GenoExperiment( m, s, model, p, d, num_pairs, l )
 

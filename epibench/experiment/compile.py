@@ -53,10 +53,10 @@ def compile_results(experiments, result_dir, final_dir):
     for i, e in enumerate( experiments ):
         result_path = os.path.join( result_dir, "experiment{0}.out".format( i ) )
 
-        if e[ "type" ] == "glm":
+        if e[ "type" ] == "geno":
             plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
             plot( result_path, plot_path )
-        elif e[ "type" ] == "fwer":
+        elif e[ "type" ] == "pheno":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
             tabulate( result_path, table_path )
 
@@ -75,4 +75,4 @@ def compile_experiments(input_dir):
     final_dir = os.path.join( input_dir, "final" )
     mkdir_p( final_dir )
 
-    compile_results( experiments[ "models" ], result_dir, final_dir )
+    compile_results( experiments[ "experiments" ], result_dir, final_dir )

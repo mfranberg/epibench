@@ -13,7 +13,7 @@ def find_sub_experiments(experiment):
     return param_iter( experiment )
 
 def walk_experiments(experiment_json):
-    for i, experiment in enumerate( experiment_json[ "models" ] ):
+    for i, experiment in enumerate( experiment_json[ "experiments" ] ):
         for sub_experiment in find_sub_experiments( experiment ):
             yield ( i, sub_experiment )
 
@@ -66,5 +66,5 @@ def run_experiments(experiment_json, method_list, output_dir, plink_path = None,
             with open( func_path, "w" ) as func_file:
                 cPickle.dump( func, func_file )
 
-            cmd = [ "epibench", "method-run", func_path ]
+            cmd = [ "epibench", "resume", func_path ]
             cluster.submit( cmd )

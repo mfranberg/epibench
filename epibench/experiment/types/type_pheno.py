@@ -6,17 +6,38 @@ import os
 from epibench.util.grouper import grouper
 from epibench.experiment.inputfiles import InputFiles
 
-class GLMFwerExperiment:
-    def __init__(self, model, params, dispersion, effect_level, replicate, link = None):
+class PhenoExperiment:
+    def __init__(self, model, params, dispersion, effect_level, replicate, link = None, plink_config = None):
         self.model = model
         self.params = params
         self.dispersion = dispersion
         self.effect_level = effect_level
         self.replicate = replicate
         self.link = link
+        self.plink_config = plink_config
+
+    def generate_plink(self, output_dir):
+        input_plink = os.path.join( output_dir, "plink" )
+        cmd = [ "epigen",
+                "plink-data",
+                "--nsamples", str( self.plink_config[ "nsamples" ] ),
+                "--nvariants", str( self.plink_config[ "nvariants" ] ),
+                "--create-pair",
+                "--out", input_plink ]
+
+        maf = self.plink_config.get( "maf" )
+        if maf:
+            cmd.extend( [ "--maf", str( maf[ 0 ] ), str( maf[ 1 ] ) ] ) 
+
+        subprocess.check_call( cmd )
+
+        return input_plink
  
     def generate_data(self, output_dir, input_plink = None):
         pheno_path = os.path.join( output_dir, "fwer.pheno" )
+
+        if not input_plink:
+            input_plink = self.generate_plink( output_dir )
 
         cmd_type = "pheno-general"
         if self.link:
@@ -39,7 +60,7 @@ class GLMFwerExperiment:
 
         logging.info( " ".join( cmd ) )
 
-        subprocess.call( cmd )
+        subprocess.check_call( cmd )
 
         return InputFiles( input_plink, input_plink + ".pair", pheno_path = pheno_path )
 
@@ -60,6 +81,11 @@ def param_iter(experiment):
     effect_params = range( len( experiment.get( "param" ) ) / 9 )
 
     num_replicates = experiment.get( "replicates", 100 )
+
+    plink_config = dict( )
+    plink_config[ "nvariants" ] = experiment.get( "nvariants", 100 )
+    plink_config[ "nsamples" ] = experiment.get( "nsamples", 2000 )
+    plink_config[ "maf" ] = experiment.get( "maf", None )
  
     # Experiment could either be mean value or beta
     link = [ None ]
@@ -72,4 +98,4 @@ def param_iter(experiment):
     
     for e, p, d, l in product( effect_params, params, dispersion, link ):
         for replicate in range( num_replicates ):
-            yield GLMFwerExperiment( model, p, d, e, replicate, l )
+            yield PhenoExperiment( model, p, d, e, replicate, l, plink_config )

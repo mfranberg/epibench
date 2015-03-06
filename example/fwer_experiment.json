@@ -1,13 +1,33 @@
 {
-    "models" : [
+    "experiments" : [
         {
-            "model" : "binomial",
-            "type" : "fwer",
-            "replicates" : 3,
+            "type" : "pheno",
+            "measure" : "fwer",
+            "model" : "normal",
+            "replicates" : 1000,
             "param" : [ 
-                0.5, 0.5, 0.5,
+                0.0, 0.0, 0.0,
+                0.3, 0.3, 0.3,
                 0.6, 0.6, 0.6,
-                0.7, 0.7, 0.7
+                
+                0.0, 0.0, 0.0,
+                0.5, 0.5, 0.5,
+                1.0, 1.0, 1.0
+            ]
+        },
+        {
+            "type" : "pheno",
+            "measure" : "fwer",
+            "model" : "normal",
+            "replicates" : 1000,
+            "param" : [ 
+                0.0, 0.3, 0.6,
+                0.3, 0.6, 0.9,
+                0.6, 0.9, 1.2,
+                
+                0.0, 0.5, 1.0,
+                0.5, 1.0, 1.5,
+                1.0, 1.5, 2.0
             ]
         }
     ]
