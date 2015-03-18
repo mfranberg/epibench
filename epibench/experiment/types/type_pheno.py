@@ -78,7 +78,7 @@ def param_iter(experiment):
     
     params = grouper( 9, experiment.get( "param" ) )
     dispersion = experiment.get( "dispersion", [ 1.0 ] )
-    effect_params = range( len( experiment.get( "param" ) ) / 9 )
+    effect_params = zip( range( len( experiment.get( "param" ) ) / 9 ), params )
 
     num_replicates = experiment.get( "replicates", 100 )
 
@@ -91,11 +91,11 @@ def param_iter(experiment):
     link = [ None ]
     params = None
     if "beta" in experiment:
-        link = experiment.get( "link", "default" )
+        link = experiment.get( "link", [ "default" ] )
         beta = grouper( 9, experiment.get( "beta" ) )
     else:
         params = grouper( 9, experiment.get( "param" ) )
     
-    for e, p, d, l in product( effect_params, params, dispersion, link ):
+    for e, d, l in product( effect_params, dispersion, link ):
         for replicate in range( num_replicates ):
-            yield PhenoExperiment( model, p, d, e, replicate, l, plink_config )
+            yield PhenoExperiment( model, e[ 1 ], d, e[ 0 ], replicate, l, plink_config )

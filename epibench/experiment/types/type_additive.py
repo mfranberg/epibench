@@ -79,7 +79,7 @@ def param_iter(experiment):
     
     params = grouper( 2, experiment.get( "param" ) )
     dispersion = experiment.get( "dispersion", [ 1.0 ] )
-    effect_params = range( len( experiment.get( "param" ) ) / 2 )
+    effect_params = zip( range( len( experiment.get( "param" ) ) / 2 ), params )
 
     num_replicates = experiment.get( "replicates", 100 )
 
@@ -93,6 +93,6 @@ def param_iter(experiment):
     link = experiment.get( "link", [ "default" ] )
     nassociated = experiment.get( "nassociated", [ 5 ] )
     
-    for e, p, d, l, n in product( effect_params, params, dispersion, link, nassociated ):
+    for e, d, l, n in product( effect_params, dispersion, link, nassociated ):
         for replicate in range( num_replicates ):
-            yield AdditiveExperiment( model, p, d, e, replicate, l, n, beta0, plink_config )
+            yield AdditiveExperiment( model, e[ 1 ], d, e[ 0 ], replicate, l, n, beta0, plink_config )

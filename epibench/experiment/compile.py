@@ -16,9 +16,12 @@ def group_result(batch_dirs):
 
 def write_results(experiment_path, output_file, with_header = True):
     with open( experiment_path, "r" ) as experiment_file:
-        if not with_header:
-            next( experiment_file )
-        
+        try:
+            if not with_header:
+                next( experiment_file )
+        except StopIteration:
+            return
+
         for line in experiment_file:
             output_file.write( line )
 
@@ -56,9 +59,11 @@ def compile_results(experiments, result_dir, final_dir):
         if e[ "type" ] == "geno":
             plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
             plot( result_path, plot_path )
-        elif e[ "type" ] == "pheno":
+        elif e[ "type" ] in ( "pheno", "additive" ) and e[ "measure" ] == "fwer":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
             tabulate( result_path, table_path )
+        else:
+            print "Experiment type and measure not supported."
 
 def compile_experiments(input_dir):
     experiments = [ ]
