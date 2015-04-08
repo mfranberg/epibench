@@ -53,7 +53,7 @@ class GenoExperiment:
         return method_results
         
     def header(self):
-        return "heritability\tmaf1\tmaf2\tncases\tncontrols\tnpairs\tmethod\tnum_missing\tnum_significant\n"
+        return "heritability\tmaf1\tmaf2\tsample_size1\tsample_size2\tnpairs\tmethod\tnum_missing\tnum_significant\n"
 
     def params_str(self):
         return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}".format(

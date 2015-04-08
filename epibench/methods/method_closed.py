@@ -55,4 +55,7 @@ def find_significant(method_params, input_files, output_dir):
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
     
-    return infer.num_significant_multiple( input_files.pair_path, output_path, [2,3,4,5,6], alpha, 3 )
+    missing_step1 = infer.num_missing_multiple( step1_path, [2,3,4] )
+    significant, missing = infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha, 3 )
+    
+    return ( significant, missing_step1 + missing )

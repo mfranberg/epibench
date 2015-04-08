@@ -55,5 +55,8 @@ def find_significant(method_params, input_files, output_dir):
     output_path = os.path.join( output_dir, "bayesiclm.out.final" )
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
-    
-    return infer.num_significant_multiple( input_files.pair_path, output_path, [2], alpha, 1 )
+
+    missing_step1 = infer.num_missing_multiple( step1_path, [2,3,4] )
+    significant, missing = infer.num_significant_multiple( output_path, [2], alpha, 1 )
+
+    return ( significant, missing + missing_step1 )

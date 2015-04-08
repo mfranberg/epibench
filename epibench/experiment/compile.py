@@ -43,6 +43,15 @@ def plot(result_path, plot_path):
     
     subprocess.check_call( cmd )
 
+def plot_all(result_path, plot_path):
+    cmd = [ "Rscript",
+            resource_filename( "epibench.external", "plot_power_all.r" ),
+            result_path,
+            plot_path
+    ]
+    
+    subprocess.check_call( cmd )
+
 def tabulate(result_path, table_path):
     cmd = [ "Rscript",
             resource_filename( "epibench.external", "table_fwer.r" ),
@@ -59,6 +68,9 @@ def compile_results(experiments, result_dir, final_dir):
         if e[ "type" ] == "geno":
             plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
             plot( result_path, plot_path )
+        if e[ "type" ] == "all" and e[ "measure" ] == "power":
+            plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
+            plot_all( result_path, plot_path )
         elif e[ "type" ] in ( "pheno", "additive" ) and e[ "measure" ] == "fwer":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
             tabulate( result_path, table_path )

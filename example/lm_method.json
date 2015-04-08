@@ -3,7 +3,7 @@
         {
             "name" : "Stage-wise LM",
             "method" : "closedlm",
-            "num-tests" : [ 1000000000000, 1000000, 1000000, 1 ]
+            "num-tests" : [ 1000000000000, 10000000, 10000000, 10 ]
         },
         {
             "name" : "Linear Regression",
