@@ -20,7 +20,8 @@ from epibench.report import infer
 #
 def find_significant(method_params, input_files, output_dir):
     cmd = [ "bayesic",
-            "-m", "wald-lm",
+            "wald",
+            "--model", "normal",
             input_files.pair_path,
             input_files.plink_prefix ]
 

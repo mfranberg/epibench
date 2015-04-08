@@ -27,7 +27,7 @@ def find_significant(method_params, input_files, output_dir):
     step1_file = open( step1_path, "w" )
     
     cmd = [ "bayesic",
-            "-m", "stepwise",
+            "stagewise",
             input_files.pair_path,
             input_files.plink_prefix ]
 
@@ -45,10 +45,10 @@ def find_significant(method_params, input_files, output_dir):
            ]
 
     cmd.append( "--weight" )
-    cmd.extend( map( str, weight ) )
+    cmd.append( ",".join( str, weight ) )
 
     cmd.append( "--num-tests" )
-    cmd.extend( map( str, num_tests ) )
+    cmd.append( ",".join( str, num_tests ) )
 
     logging.info( " ".join( cmd ) )
     output_path = os.path.join( output_dir, "bayesic.out.final" )

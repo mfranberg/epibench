@@ -23,7 +23,7 @@ def find_significant(method_params, input_files, output_dir):
     factor = method_params.get( "factor", "factor" )
 
     cmd = [ "bayesic",
-            "-m", "glm",
+            "glm",
             "-l", scale,
             "-f", factor,
             input_files.pair_path,

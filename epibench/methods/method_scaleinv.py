@@ -19,22 +19,20 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, input_files, output_dir):
-    num_tests = method_params.get( "num-tests", [ 0, 0, 0, 0 ] )
+    num_tests = method_params.get( "num-tests", 0 )
     alpha = method_params.get( "alpha", 0.05 )
         
-    cmd =[ "bayesic-correct",
-           "--only-glm",
+    cmd =[ "bayesic",
+           "scaleinv",
+           "--model", "binomial",
            "--alpha", str( alpha ),
            input_files.pair_path,
            input_files.plink_prefix
            ]
-
-    cmd.append( "--num-tests" )
-    cmd.extend( map( str, num_tests ) )
 
     logging.info( " ".join( cmd ) )
     output_path = os.path.join( output_dir, "bayesic.out" )
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
      
-    return infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha, 3 )
+    return infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha / num_tests, 3 )
