@@ -3,6 +3,7 @@
         {
             "name" : "Stage-wise",
             "method" : "closed",
+            "model" : "binomial",
             "num-tests" : [ 1000000000000, 1000000, 1000000, 1 ]
         },
         {

@@ -22,6 +22,7 @@ def find_significant(method_params, input_files, output_dir):
     num_tests = method_params.get( "num-tests", [ 0, 0, 0, 0 ] )
     alpha = method_params.get( "alpha", 0.05 )
     weight = method_params.get( "weight", [ 0.25, 0.25, 0.25, 0.25 ] )
+    model = method_params.get( "model", "binomial" )
     
     step1_path = os.path.join( output_dir, "bayesic.out" )
     step1_file = open( step1_path, "w" )
@@ -38,24 +39,39 @@ def find_significant(method_params, input_files, output_dir):
     subprocess.call( cmd, stdout = step1_file )
     step1_file.close( )
  
+    method = "adaptive"
+    if any( map( lambda x: x != 0, num_tests ) ):
+        method = "static"
+
+    output_path = os.path.join( output_dir, "bayesic.out.final" )
     cmd =[ "bayesic-correct",
+           "--method", method,
+           "--model", model,
            "--alpha", str( alpha ),
-           step1_path,
-           input_files.plink_prefix
+           "--bfile", input_files.plink_prefix,
+           "--output-prefix", output_path,
+           step1_path
            ]
 
     cmd.append( "--weight" )
-    cmd.append( ",".join( str, weight ) )
+    cmd.append( ",".join( map( str, weight ) ) )
 
     cmd.append( "--num-tests" )
-    cmd.append( ",".join( str, num_tests ) )
+    cmd.append( ",".join( map( str, num_tests ) ) )
 
     logging.info( " ".join( cmd ) )
-    output_path = os.path.join( output_dir, "bayesic.out.final" )
     output_file = open( output_path, "w" )
     subprocess.call( cmd, stdout = output_file )
+    output_file.close( )
     
-    missing_step1 = infer.num_missing_multiple( step1_path, [2,3,4] )
-    significant, missing = infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha, 3 )
-    
-    return ( significant, missing_step1 + missing )
+    if model == "binomial":
+        missing_step1 = infer.num_missing_multiple( step1_path, [2,3,4] )
+        significant, missing = infer.num_significant_multiple( output_path, [2,3,4,5,6], alpha, 3 )
+        
+        return ( significant, missing_step1 + missing )
+    else:
+        missing_step1 = infer.num_missing_multiple( step1_path, [2,3,4] )
+        significant, missing = infer.num_significant_multiple( output_path, [2], alpha, 1 )
+        
+        return ( significant, missing_step1 + missing )
+

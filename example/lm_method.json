@@ -2,7 +2,8 @@
     "methods" : [
         {
             "name" : "Stage-wise LM",
-            "method" : "closedlm",
+            "method" : "closed",
+            "model" : "normal",
             "num-tests" : [ 1000000000000, 10000000, 10000000, 10 ]
         },
         {
