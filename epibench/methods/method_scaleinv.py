@@ -25,7 +25,6 @@ def find_significant(method_params, input_files, output_dir):
     cmd =[ "bayesic",
            "scaleinv",
            "--model", "binomial",
-           "--alpha", str( alpha ),
            input_files.pair_path,
            input_files.plink_prefix
            ]
