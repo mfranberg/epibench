@@ -22,7 +22,8 @@ from epibench.report import infer
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
     cmd = [ "bayesic",
-            "loglinear",
+            "caseonly",
+            "--method", "contrast",
             input_files.pair_path,
             input_files.plink_prefix ]
 
@@ -31,11 +32,11 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
  
     logging.info( " ".join( cmd ) )
     
-    output_path = os.path.join( output_dir, "loglinear.out" )
+    output_path = os.path.join( output_dir, "ldcontrast.out" )
     with open( output_path, "w" ) as output_file:
         subprocess.call( cmd, stdout = output_file )
     
     alpha = method_params.get( "alpha", 0.05 )
     num_tests = method_params.get( "num-tests", 1 )
 
-    return infer.num_significant_bonferroni( output_path, 2, alpha, num_tests )
+    return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )

@@ -12,13 +12,15 @@ from epibench.report import infer
 # @param method_params This contains parameters for the method passed by the
 #                      method json file, and is supplied as a dict directly.
 #
+# @param experiment_params Contains some parameters relevant for the specific experiment.
+#
 # @param plink_file A plink file object to apply the algorithm to. This object
 #                   contains a path to the plink, phenotype and covariate file.
 #
 # @param output_dir A directory where the method can create temporary files used
 #                   during the analysis.
 #
-def find_significant(method_params, input_files, output_dir):
+def find_significant(method_params, experiment_params, input_files, output_dir):
     num_tests = method_params.get( "num-tests", 0 )
     alpha = method_params.get( "alpha", 0.05 )
         

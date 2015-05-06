@@ -1,4 +1,3 @@
-
 ##
 # Computes the heritability V(P|G) / V(P).
 #
@@ -29,3 +28,16 @@ def heritability(model, mu, maf, dispersion):
         h_denominator += sum( d**2 * f for d, f in zip( [ dispersion ] * 9, joint_maf ) )
 
     return h_numerator / h_denominator
+
+##
+# Computes the disease prevalence.
+#
+def prevalence(mu, maf):
+    p = [ ( 1 - maf[ 0 ] )**2, 2 * maf[ 0 ] * ( 1 - maf[ 0 ] ), ( maf[ 0 ] )**2 ]
+    q = [ ( 1 - maf[ 1 ] )**2, 2 * maf[ 1 ] * ( 1 - maf[ 1 ] ), ( maf[ 1 ] )**2 ]
+
+    joint_maf =  [ p[ 0 ] * q[ 0 ], p[ 0 ] * q[ 1 ], p[ 0 ] * q[ 2 ],
+                   p[ 1 ] * q[ 0 ], p[ 1 ] * q[ 1 ], p[ 1 ] * q[ 2 ],
+                   p[ 2 ] * q[ 0 ], p[ 2 ] * q[ 1 ], p[ 2 ] * q[ 2 ] ]
+
+    return sum( m * f for m, f in zip( mu, joint_maf ) )

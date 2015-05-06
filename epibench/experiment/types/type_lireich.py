@@ -127,4 +127,4 @@ def param_iter(experiment):
     
     for h, b, s, m in product( heritabilities, base_risks, sample_size, maf ):
         for mu in all_interactions( h, b, m ):
-            yield GenoExperiment( m, s, "binomial", mu, 1.0, num_pairs, None )
+            yield GenoExperiment( m, s, "binomial", mu, 1.0, num_pairs, None, h )

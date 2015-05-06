@@ -4,11 +4,11 @@ import os
 import logging
 
 from epibench.util.grouper import grouper
-from epibench.util.heritability import heritability
+from epibench.util.heritability import heritability, prevalence
 from epibench.experiment.inputfiles import InputFiles
 
 class GenoExperiment:
-    def __init__(self, maf, sample_size, model, params, dispersion, num_pairs, link = None):
+    def __init__(self, maf, sample_size, model, params, dispersion, num_pairs, link = None, desired_h2 = 0.0):
         self.maf = maf
         self.sample_size = sample_size
         self.model = model
@@ -16,6 +16,15 @@ class GenoExperiment:
         self.dispersion = dispersion
         self.num_pairs = num_pairs
         self.link = link
+        self.desired_h2 = desired_h2
+
+    def get_params(self):
+        params = dict( )
+        if self.model == "binomial":
+            params[ "prevalence" ] = prevalence( self.params, self.maf )
+            params[ "ccr" ] = float( self.sample_size[ 0 ] ) / sum( self.sample_size )
+
+        return params
 
     def generate_data(self, output_dir, input_plink = None):
         plink_prefix = os.path.join( output_dir, "plink" )
@@ -53,11 +62,12 @@ class GenoExperiment:
         return method_results
         
     def header(self):
-        return "heritability\tmaf1\tmaf2\tsample_size1\tsample_size2\tnpairs\tmethod\tnum_missing\tnum_significant\n"
+        return "heritability\tdesired_h2\tmaf1\tmaf2\tsample_size1\tsample_size2\tnpairs\tmethod\tnum_missing\tnum_significant\n"
 
     def params_str(self):
-        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}".format(
+        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}".format(
                 heritability( self.model, self.params, self.maf, self.dispersion ),
+                self.desired_h2,
                 self.maf[ 0 ],
                 self.maf[ 1 ],
                 self.sample_size[ 0 ],

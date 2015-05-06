@@ -17,13 +17,13 @@ def walk_experiments(experiment_json):
         for sub_experiment in find_sub_experiments( experiment ):
             yield ( i, sub_experiment )
 
-def run_methods(method_list, input_files, output_dir):
+def run_methods(method_list, experiment_params, input_files, output_dir):
     method_id = 0
     for method, find_significant in method_list:
         method_output_dir = setup_dir( output_dir, "method", "method{0}".format( method_id ) )
         method_id += 1
 
-        yield ( method[ "name" ], find_significant( method, input_files, method_output_dir ) )
+        yield ( method[ "name" ], find_significant( method, experiment_params, input_files, method_output_dir ) )
 
 def run_experiment_list(experiment_list, method_list, output_dir, plink_path = None):
     data_dir = setup_dir( output_dir, "data", "" )
@@ -42,7 +42,7 @@ def run_experiment_list(experiment_list, method_list, output_dir, plink_path = N
             started_experiments.add( experiment_id )
 
         input_files = experiment.generate_data( data_dir, plink_path )
-        method_results = run_methods( method_list, input_files, output_dir )
+        method_results = run_methods( method_list, experiment.get_params( ), input_files, output_dir )
         experiment.write_results( method_results, result_file )
 
 def run_experiments(experiment_json, method_list, output_dir, plink_path = None, cluster = None):

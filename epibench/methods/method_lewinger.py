@@ -21,8 +21,11 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
+    stage1_path = os.path.join( output_dir, "lewinger.res" )
     cmd = [ "bayesic",
-            "loglinear",
+            "caseonly",
+            "--method", "r2",
+            "-o", stage1_path,
             input_files.pair_path,
             input_files.plink_prefix ]
 
@@ -31,11 +34,25 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
  
     logging.info( " ".join( cmd ) )
     
-    output_path = os.path.join( output_dir, "loglinear.out" )
+    subprocess.check_call( cmd )
+
+    step1_alpha = method_params.get( "step1-alpha", 1e-6 )
+
+    output_path = os.path.join( output_dir, "lewinger.out" )
     with open( output_path, "w" ) as output_file:
-        subprocess.call( cmd, stdout = output_file )
+        cmd = [ "bayesic",
+                "view",
+                "-p", "lt",
+                "-f", "1",
+                "-t", str( step1_alpha ),
+                stage1_path ]
+        subprocess.check_call( cmd, stdout = output_file )
     
     alpha = method_params.get( "alpha", 0.05 )
     num_tests = method_params.get( "num-tests", 1 )
 
-    return infer.num_significant_bonferroni( output_path, 2, alpha, num_tests )
+    stage2_num_tests = 0
+    if num_tests ! = 0:
+        stage2_num_tests = min( 1, int( num_tests * step1_alpha ) )
+
+    return infer.num_significant_bonferroni( output_path, 5, alpha, stage2_num_tests )

@@ -62,7 +62,7 @@ method_power$power[ method_power$num_missing == method_power$npairs ] = 0.0
 
 pdf( output_file, width = 2 * 6.7, height = 2 * 6.7 / 1.618 )
 
-p = ggplot( method_power, aes( x = power, colour = method ) ) + stat_ecdf_reversed( geom = "smooth" ) + facet_grid( sample_size1 ~ heritability, scales = "free_x" ) +
+p = ggplot( method_power, aes( x = power, colour = method ) ) + stat_ecdf_reversed( geom = "smooth" ) + facet_grid( sample_size1 ~ desired_h2, scales = "free_x" ) +
     scale_x_continuous( "t" ) +
     scale_y_continuous( "Fraction of models with power >= t", limits = c( 0.0, 1.0 ) ) +
     scale_color_discrete( "Method" )
