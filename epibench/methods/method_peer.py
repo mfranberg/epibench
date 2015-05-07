@@ -108,6 +108,11 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     pd = experiment_params.get( "prevalence" )
     ccr = experiment_params.get( "ccr" )
 
+    if num_tests == 0:
+        with open( input_files.pair_path, "r" ) as pair_file:
+            for line in pair_file:
+                num_tests += 1
+
     zb = qnorm( 1 - ( alpha / ( num_tests * 4 ) ) )
     zbprim = ( 1 - pd ) * sqrt( 1 / ccr ) * zb
 

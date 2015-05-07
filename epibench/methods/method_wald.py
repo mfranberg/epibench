@@ -21,9 +21,10 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
+    model = method_params.get( "model", "binomial" )
     cmd = [ "bayesic",
             "wald",
-            "--model", "normal",
+            "--model", model,
             input_files.pair_path,
             input_files.plink_prefix ]
 
@@ -32,7 +33,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
  
     logging.info( " ".join( cmd ) )
     
-    output_path = os.path.join( output_dir, "waldlm.out" )
+    output_path = os.path.join( output_dir, "wald.out" )
     with open( output_path, "w" ) as output_file:
         subprocess.call( cmd, stdout = output_file )
     

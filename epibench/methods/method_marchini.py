@@ -76,6 +76,9 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     output_path = os.path.join( output_dir, "marchini.out" )
     with open( output_path, "w" ) as output_file:
         subprocess.check_call( cmd, stdout = output_file )
- 
-    expected_num_tests = int( step1_alpha * num_tests + 1 ) * ( int( step1_alpha * num_tests + 1 ) - 1 ) / 2
+
+    expected_num_tests = 0
+    if num_tests != 0:
+        expected_num_tests = int( step1_alpha * num_tests + 1 ) * ( int( step1_alpha * num_tests + 1 ) - 1 ) / 2
+
     return infer.num_significant_bonferroni( output_path, 3, alpha, expected_num_tests )
