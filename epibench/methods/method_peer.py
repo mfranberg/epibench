@@ -106,7 +106,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     alpha = method_params.get( "alpha", 0.05 )
     num_tests = method_params.get( "num-tests", 1 )
     pd = experiment_params.get( "prevalence" )
-    ccr = experiment_params.get( "ccr" )
+    ccr = experiment_params.get( "case-control-ratio" )
 
     if num_tests == 0:
         with open( input_files.pair_path, "r" ) as pair_file:

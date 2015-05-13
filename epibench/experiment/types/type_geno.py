@@ -18,14 +18,6 @@ class GenoExperiment:
         self.link = link
         self.desired_h2 = desired_h2
 
-    def get_params(self):
-        params = dict( )
-        if self.model == "binomial":
-            params[ "prevalence" ] = prevalence( self.params, self.maf )
-            params[ "ccr" ] = float( self.sample_size[ 0 ] ) / sum( self.sample_size )
-
-        return params
-
     def generate_data(self, output_dir, input_plink = None):
         plink_prefix = os.path.join( output_dir, "plink" )
 
@@ -93,8 +85,8 @@ def param_iter(experiment):
     link = [None]
     params = None
     if "beta" in experiment:
-        link = experiment.get( "link", "default" )
-        beta = grouper( 9, experiment.get( "beta" ) )
+        link = [ experiment.get( "link", "default" ) ]
+        params = grouper( 9, experiment.get( "beta" ) )
     else:
         params = grouper( 9, experiment.get( "param" ) )
     

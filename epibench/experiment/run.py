@@ -8,6 +8,12 @@ from epibench.util.dirhandle import setup_file, setup_dir
 from epibench.util.grouper import grouper
 from epibench.experiment.method import find_param_iter
 
+def get_info(info_path):
+    try:
+        return json.load( open( info_path, "r" ) )
+    except IOError:
+        return dict( )
+
 def find_sub_experiments(experiment):
     param_iter = find_param_iter( experiment.get( "type" ) )
     return param_iter( experiment )
@@ -42,7 +48,7 @@ def run_experiment_list(experiment_list, method_list, output_dir, plink_path = N
             started_experiments.add( experiment_id )
 
         input_files = experiment.generate_data( data_dir, plink_path )
-        method_results = run_methods( method_list, experiment.get_params( ), input_files, output_dir )
+        method_results = run_methods( method_list, get_info( plink_path ), input_files, output_dir )
         experiment.write_results( method_results, result_file )
 
 def run_experiments(experiment_json, method_list, output_dir, plink_path = None, cluster = None):

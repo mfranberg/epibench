@@ -26,18 +26,18 @@ def num_significant_bonferroni(output_path, column, alpha, num_tests, missing = 
         threshold = alpha
         if num_tests == 0:
             if len( values ) <= 0:
-                return [ ]
+                return ( [ ], num_missing )
             threshold = alpha / len( values )
         else:
             threshold = alpha / num_tests
 
-        return filter( lambda x: x[ 2 ] <= threshold, values ), num_missing
+        return list( filter( lambda x: x[ 2 ] <= threshold, values ) ), num_missing
 
 def num_significant_threshold(output_path, column, threshold, missing = "NA"):
     with open( output_path, "r" ) as output_file:
         values, num_missing = read_significance_value_from_file( output_file, column )
 
-        return filter( lambda x: x[ 2 ] <= threshold, values ), num_missing
+        return list( filter( lambda x: x[ 2 ] <= threshold, values ) ), num_missing
 
 def num_missing_multiple(output_path, valid_columns, missing = "NA"):
     value_list = list( )
@@ -80,7 +80,7 @@ def num_significant_multiple(output_path, valid_columns, threshold, min_valid, m
             elif num_missing_in_row > 0:
                 num_missing += 1
 
-    return filter( lambda x: x[ 2 ] <= threshold, value_list ), num_missing
+    return list( filter( lambda x: x[ 2 ] <= threshold, value_list ) ), num_missing
 
 
 def num_significant_peer(output_path, stage1_columns, stage1_threshold, stage2_columns, stage2_threshold, missing = "NA"):
@@ -90,8 +90,7 @@ def num_significant_peer(output_path, stage1_columns, stage1_threshold, stage2_c
         for line in output_file:
             column_list = line.strip( ).split( )
             
-            stage1 = [ ]
-            stage2 = [ ]
+            one_ok = False
             for column1, column2 in zip( stage1_columns, stage2_columns ):
                 if column_list[ column1 ] == missing or column_list[ column2 ] == missing:
                     continue
@@ -101,19 +100,16 @@ def num_significant_peer(output_path, stage1_columns, stage1_threshold, stage2_c
                 try:
                     value1 =  float( column_list[ column1 ] )
                     value2 =  float( column_list[ column2 ] )
+                    one_ok = True
                 except:
                     continue
 
-                stage1.append( value1 )
-                stage2.append( value2 )
+                if value1 >= stage1_threshold and value2 <= stage2_threshold:
+                    value_list.append( ( column_list[ 0 ], column_list[ 1 ], value2 ) )
+                    break
 
-            if len( stage1 ) <= 0 or len( stage2 ) <= 0 or len( stage1 ) != len( stage2 ):
+            if not one_ok:
                 num_missing += 1
-                continue
-
-            best_index, best_value = max( enumerate( stage1 ), key = lambda x: x[ 1 ] )
-            if best_value >= stage1_threshold and stage2[ best_index ] <= stage2_threshold:
-                value_list.append( ( column_list[ 0 ], column_list[ 1 ], stage2[ best_index ] ) )
 
     return value_list, num_missing
 

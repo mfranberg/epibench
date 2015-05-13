@@ -86,6 +86,9 @@ def compile_results(experiments, result_dir, final_dir):
         elif e[ "type" ] in ( "pheno", "additive" ) and e[ "measure" ] == "fwer":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
             tabulate( result_path, table_path )
+        elif e[ "type" ] == "casecontrol" and e[ "measure" ] == "fwer":
+            table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
+            tabulate( result_path, table_path )
         else:
             print "Experiment type and measure not supported."
 

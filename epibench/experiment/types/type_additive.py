@@ -18,9 +18,6 @@ class AdditiveExperiment:
         self.beta0 = beta0
         self.plink_config = plink_config
 
-    def get_params(self):
-        return dict( )
-
     def generate_plink(self, output_dir):
         input_plink = os.path.join( output_dir, "plink" )
         cmd = [ "epigen",

@@ -40,13 +40,23 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     logging.info( " ".join( cmd ) )
     subprocess.call( cmd, stdout = step1_file )
     step1_file.close( )
+
+    if num_tests == 0:
+        num_tests = [ 0, 0, 0, 0 ]
+    elif num_tests == -1:
+        num_true = experiment_params.get( "num-true" )
+        num_false = experiment_params.get( "num-false" )
+        num_tests = [ num_false * ( num_false - 1 ) / 2,
+                      num_true * num_false,
+                      num_true * num_false,
+                      num_true * ( num_true - 1 ) / 2 ]
  
     method = "adaptive"
     if any( map( lambda x: x != 0, num_tests ) ):
         method = "static"
 
     output_path = os.path.join( output_dir, "bayesic.out.final" )
-    cmd =[ "bayesic-correct",
+    cmd =[ "bayesic", "correct",
            "--method", method,
            "--model", model,
            "--alpha", str( alpha ),
@@ -54,6 +64,9 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
            "--output-prefix", output_path,
            step1_path
            ]
+    
+    if input_files.pheno_path:
+        cmd.extend( [ "-p", input_files.pheno_path ] )
 
     cmd.append( "--weight" )
     cmd.append( ",".join( map( str, weight ) ) )

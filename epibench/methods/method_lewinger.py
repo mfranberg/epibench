@@ -52,7 +52,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     num_tests = method_params.get( "num-tests", 1 )
 
     stage2_num_tests = 0
-    if num_tests ! = 0:
+    if num_tests != 0:
         stage2_num_tests = min( 1, int( num_tests * step1_alpha ) )
 
     return infer.num_significant_bonferroni( output_path, 5, alpha, stage2_num_tests )
