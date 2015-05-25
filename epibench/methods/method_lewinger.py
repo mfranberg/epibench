@@ -22,7 +22,7 @@ from epibench.report import infer
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
     stage1_path = os.path.join( output_dir, "lewinger.res" )
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "caseonly",
             "--method", "r2",
             "-o", stage1_path,
@@ -40,7 +40,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
 
     output_path = os.path.join( output_dir, "lewinger.out" )
     with open( output_path, "w" ) as output_file:
-        cmd = [ "bayesic",
+        cmd = [ "besiq",
                 "view",
                 "-p", "lt",
                 "-f", "1",

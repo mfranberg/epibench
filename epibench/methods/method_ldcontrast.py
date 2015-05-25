@@ -21,7 +21,7 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "caseonly",
             "--method", "contrast",
             input_files.pair_path,

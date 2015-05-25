@@ -22,7 +22,7 @@ from epibench.report import infer
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
     model = method_params.get( "model", "binomial" )
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "wald",
             "--model", model,
             input_files.pair_path,

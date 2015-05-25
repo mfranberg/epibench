@@ -24,7 +24,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     scale = method_params.get( "scale", "logistic" )
     factor = method_params.get( "factor", "factor" )
 
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "glm",
             "-l", scale,
             "-f", factor,
@@ -39,7 +39,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     
     logging.info( " ".join( cmd ) )
     
-    output_path = os.path.join( output_dir, "bayesic.out" )
+    output_path = os.path.join( output_dir, "besiq.out" )
     with open( output_path, "w" ) as output_file:
         subprocess.call( cmd, stdout = output_file )
     
