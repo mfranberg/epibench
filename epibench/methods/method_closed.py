@@ -26,10 +26,10 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     weight = method_params.get( "weight", [ 0.25, 0.25, 0.25, 0.25 ] )
     model = method_params.get( "model", "binomial" )
     
-    step1_path = os.path.join( output_dir, "bayesic.out" )
+    step1_path = os.path.join( output_dir, "besiq.out" )
     step1_file = open( step1_path, "w" )
     
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "stagewise",
             input_files.pair_path,
             input_files.plink_prefix ]
@@ -55,8 +55,8 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     if any( map( lambda x: x != 0, num_tests ) ):
         method = "static"
 
-    output_path = os.path.join( output_dir, "bayesic.out.final" )
-    cmd =[ "bayesic", "correct",
+    output_path = os.path.join( output_dir, "besiq.out.final" )
+    cmd =[ "besiq", "correct",
            "--method", method,
            "--model", model,
            "--alpha", str( alpha ),

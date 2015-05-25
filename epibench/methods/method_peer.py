@@ -88,7 +88,7 @@ def qnorm(p, mean = 0.0, sd = 1.0):
 #                   during the analysis.
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "caseonly",
             "--method", "peer",
             input_files.pair_path,

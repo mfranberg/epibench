@@ -62,7 +62,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
                 new_pairs_file.write( line )
 
     # Perform logistic regression on the remaining pairs
-    cmd = [ "bayesic",
+    cmd = [ "besiq",
             "wald",
             "--model", "binomial",
             new_pairs,
