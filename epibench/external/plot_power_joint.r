@@ -14,14 +14,17 @@ output_file = argv[ 2 ]
 
 method_power = read.table( power_file, header = TRUE )
 method_power$power = method_power$num_significant / method_power$npairs
-#method_power$power[ method_power$num_missing == method_power$npairs ] = 0.0
+method_power$power = method_power$num_significant / (method_power$npairs - method_power$num_missing)
+method_power$power[ method_power$npairs - method_power$num_missing <= 10 ] = 0.0
 
 pdf( output_file, width = 2 * 6.7, height = 2 * 6.7 / 1.618 )
 
+cbPalette = c( "#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7" )
 p = ggplot( method_power, aes( x = heritability, y = power, color = method ) ) + geom_line( ) + facet_grid( sample_size1 ~ maf1, scales = "free_x" ) +
     scale_x_continuous( "Heritability" ) +
     scale_y_continuous( "Power", limits = c( 0.0, 1.0 ) ) + 
-    scale_color_discrete( "Method" ) +
+    #scale_color_discrete( "Method" ) +
+    scale_color_manual( "Method", values = cbPalette ) +
     geom_point( )
 
 z <- ggplot_gtable(ggplot_build(p))

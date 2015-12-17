@@ -94,7 +94,7 @@ def generate():
 #
 def find_penetrance(desired_heritability, base_risk, maf, model):
     if sum( model ) == 0 or sum( model ) == 9:
-        return [ 0.5 ] * 9
+        return [ base_risk ] * 9
 
     step = 0.01
     disease_p = base_risk + step
@@ -113,10 +113,14 @@ def find_penetrance(desired_heritability, base_risk, maf, model):
 
     return penetrance
 
-def all_interactions(h2, base_risk, maf):
+def all_interactions(h2, base_risk, maf, use_null = False):
     interactions, nulls = generate( )
     partial_find_penetrance = partial( find_penetrance, h2, base_risk, maf )
-    return map( partial_find_penetrance, interactions )
+
+    if not use_null:
+        return map( partial_find_penetrance, interactions )
+    else:
+        return map( partial_find_penetrance, nulls )
 
 def param_iter(experiment):
     heritabilities = experiment.get( "heritability", [ 0.2 ] )
@@ -124,7 +128,8 @@ def param_iter(experiment):
     num_pairs = experiment.get( "num-pairs", 200 )
     sample_size = grouper( 2, experiment.get( "sample-size" ) )
     maf = grouper( 2, experiment.get( "maf" ) )
+    use_null = experiment.get( "only-null", "false" ) == "true"
     
     for h, b, s, m in product( heritabilities, base_risks, sample_size, maf ):
-        for mu in all_interactions( h, b, m ):
+        for mu in all_interactions( h, b, m, use_null ):
             yield GenoExperiment( m, s, "binomial", mu, 1.0, num_pairs, None, h )

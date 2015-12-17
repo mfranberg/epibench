@@ -9,6 +9,9 @@ from epibench.util.grouper import grouper
 from epibench.experiment.method import find_param_iter
 
 def get_info(info_path):
+    if not info_path:
+        return dict( )
+
     try:
         return json.load( open( info_path, "r" ) )
     except IOError:
@@ -48,8 +51,9 @@ def run_experiment_list(experiment_list, method_list, output_dir, plink_path = N
             started_experiments.add( experiment_id )
 
         input_files = experiment.generate_data( data_dir, plink_path )
-        method_results = run_methods( method_list, get_info( plink_path ), input_files, output_dir )
-        experiment.write_results( method_results, result_file )
+        info = get_info( input_files.info_path )
+        method_results = run_methods( method_list, info, input_files, output_dir )
+        experiment.write_results( info, method_results, result_file )
 
 def run_experiments(experiment_json, method_list, output_dir, plink_path = None, cluster = None):
     json_path = setup_file( output_dir, "", "experiments.json" )

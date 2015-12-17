@@ -43,9 +43,27 @@ def plot(result_path, plot_path):
     
     subprocess.check_call( cmd )
 
+def plot_replicate(result_path, plot_path):
+    cmd = [ "Rscript",
+            resource_filename( "epibench.external", "plot_power_joint_replicate.r" ),
+            result_path,
+            plot_path
+    ]
+    
+    subprocess.check_call( cmd )
+
 def plot_all(result_path, plot_path):
     cmd = [ "Rscript",
             resource_filename( "epibench.external", "plot_power_all.r" ),
+            result_path,
+            plot_path
+    ]
+    
+    subprocess.check_call( cmd )
+
+def plot_null(result_path, plot_path):
+    cmd = [ "Rscript",
+            resource_filename( "epibench.external", "plot_fpr_null.r" ),
             result_path,
             plot_path
     ]
@@ -61,9 +79,10 @@ def plot_lireich(result_path, plot_path):
     
     subprocess.check_call( cmd )
 
-def tabulate(result_path, table_path):
+def tabulate(result_path, table_path, experiment_name):
     cmd = [ "Rscript",
             resource_filename( "epibench.external", "table_fwer.r" ),
+            experiment_name,
             result_path,
             table_path
             ]
@@ -80,15 +99,21 @@ def compile_results(experiments, result_dir, final_dir):
         if e[ "type" ] == "all" and e[ "measure" ] == "power":
             plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
             plot_all( result_path, plot_path )
+        if e[ "type" ] ==  "null" and e[ "measure" ] == "power":
+            plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
+            plot_null( result_path, plot_path )
         if e[ "type" ] == "lireich" and e[ "measure" ] == "power":
             plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
             plot_lireich( result_path, plot_path )
         elif e[ "type" ] in ( "pheno", "additive" ) and e[ "measure" ] == "fwer":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
-            tabulate( result_path, table_path )
+            tabulate( result_path, table_path, e[ "label" ] )
         elif e[ "type" ] == "casecontrol" and e[ "measure" ] == "fwer":
             table_path = os.path.join( final_dir, "experiment{0}.csv".format( i ) )
-            tabulate( result_path, table_path )
+            tabulate( result_path, table_path, e[ "label" ] )
+        elif e[ "type" ] == "casecontrol" and e[ "measure" ] == "power":
+            plot_path = os.path.join( final_dir, "experiment{0}.pdf".format( i ) )
+            plot_replicate( result_path, plot_path )
         else:
             print "Experiment type and measure not supported."
 

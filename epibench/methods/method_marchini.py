@@ -4,6 +4,22 @@ import os
 
 from epibench.report import infer
 
+def convert_to_plink(bayesic_pheno, output_pheno):
+    output_file = open( output_pheno, "w" )
+    with open( bayesic_pheno, "r" ) as pheno_file:
+        for line in pheno_file:
+            column = line.strip( ).split( )
+            if line.startswith( "FID" ):
+                output_file.write( "\t".join( column ) + "\n" )
+            else:
+                if column[ 2 ] != "NA":
+                    column[ 2 ] = str( int( float( column[ 2 ] ) ) + 1 )
+                else:
+                    column[ 2 ] = "0"
+                output_file.write( "\t".join( column ) + "\n" )
+
+    output_file.close( )
+
 ##
 # Given a plink file this function should apply
 # the algorithm a return a list of the significant
@@ -28,7 +44,8 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
             "--model", "--out", step1_path ]
 
     if input_files.pheno_path:
-        cmd.extend( [ "--pheno", input_files.pheno_path ] )
+        convert_to_plink( input_files.pheno_path, step1_path + ".pheno" )
+        cmd.extend( [ "--pheno", step1_path + ".pheno" ] )
 
     subprocess.check_call( cmd, stdout = open( os.devnull, "w" ) )
 

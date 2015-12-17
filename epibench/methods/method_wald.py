@@ -22,15 +22,19 @@ from epibench.report import infer
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
     model = method_params.get( "model", "binomial" )
+    separate = method_params.get( "separate", "false" )
     cmd = [ "besiq",
             "wald",
             "--model", model,
             input_files.pair_path,
             input_files.plink_prefix ]
 
+    if separate == "true":
+        cmd.append( "--separate" )
+
     if input_files.pheno_path:
         cmd.extend( [ "-p", input_files.pheno_path ] )
- 
+
     logging.info( " ".join( cmd ) )
     
     output_path = os.path.join( output_dir, "wald.out" )
@@ -40,4 +44,7 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     alpha = method_params.get( "alpha", 0.05 )
     num_tests = method_params.get( "num-tests", 1 )
 
-    return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )
+    if separate == "false":
+        return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )
+    else:
+        return infer.num_significant_multiple_bonferroni( output_path, [3, 5, 7, 9], alpha, num_tests )

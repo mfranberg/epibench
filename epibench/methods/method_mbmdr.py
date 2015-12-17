@@ -112,4 +112,4 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     logging.info( " ".join( cmd ) )
     subprocess.check_call( cmd )
 
-    return num_significant( output_path, alpha / num_top )
+    return num_significant( output_path, alpha )

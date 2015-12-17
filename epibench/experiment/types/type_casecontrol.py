@@ -20,7 +20,6 @@ class CaseControlExperiment:
         self.num_false = nvariants[ 1 ]
         self.link = link
         self.beta0 = beta0
-        self.info = dict( )
 
     def generate_data(self, output_dir, input_plink = None):
         input_plink = os.path.join( output_dir, "plink" )
@@ -51,9 +50,9 @@ class CaseControlExperiment:
 
         subprocess.check_call( cmd )
 
-        return InputFiles( input_plink, input_plink + ".pair", pheno_path = pheno_path )
+        return InputFiles( input_plink, input_plink + ".pair", pheno_path = pheno_path, info_path = input_plink + ".info" )
 
-    def write_results(self, method_results, result_file):
+    def write_results(self, info, method_results, result_file):
         for name, significant in method_results:
             result_file.write( "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t\"{9}\"\t{10}\n".format( self.replicate, self.effect_level, self.sample_size[ 0 ], self.sample_size[ 1 ], self.maf[ 0 ], self.maf[ 1 ], self.num_true, self.num_false, ",".join( map( str, self.params ) ), name, len( significant[ 0 ] ) ) )
 

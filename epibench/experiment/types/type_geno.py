@@ -8,7 +8,7 @@ from epibench.util.heritability import heritability, prevalence
 from epibench.experiment.inputfiles import InputFiles
 
 class GenoExperiment:
-    def __init__(self, maf, sample_size, model, params, dispersion, num_pairs, link = None, desired_h2 = 0.0):
+    def __init__(self, maf, sample_size, model, params, dispersion, num_pairs, link = None, desired_h2 = 0.0, ld = None, name = "NA"):
         self.maf = maf
         self.sample_size = sample_size
         self.model = model
@@ -16,7 +16,9 @@ class GenoExperiment:
         self.dispersion = dispersion
         self.num_pairs = num_pairs
         self.link = link
+        self.ld = ld
         self.desired_h2 = desired_h2
+        self.name = name
 
     def generate_data(self, output_dir, input_plink = None):
         plink_prefix = os.path.join( output_dir, "plink" )
@@ -42,36 +44,49 @@ class GenoExperiment:
             cmd.append( "--mu" )
             cmd.extend( list( map( str, self.params ) ) )
 
+        if self.ld:
+            cmd.append( "--ld" )
+            cmd.append( str( self.ld ) )
+
         logging.info( " ".join( cmd ) )
         subprocess.call( cmd )
 
-        return InputFiles( plink_prefix, plink_prefix + ".pair" )
+        return InputFiles( plink_prefix, plink_prefix + ".pair", info_path = plink_prefix + ".info" )
 
-    def write_results(self, method_results, result_file):
+    def write_results(self, info, method_results, result_file):
         for name, significant in method_results:
-            result_file.write( "{0}\t\"{1}\"\t{2}\t{3}\n".format( self.params_str( ), name, significant[ 1 ], len( significant[ 0 ] ) ) )
+            result_file.write( "{0}\t\"{1}\"\t{2}\t{3}\n".format( self.params_str( info ), name, significant[ 1 ], len( significant[ 0 ] ) ) )
 
         return method_results
         
     def header(self):
-        return "heritability\tdesired_h2\tmaf1\tmaf2\tsample_size1\tsample_size2\tnpairs\tmethod\tnum_missing\tnum_significant\n"
+        return "name\theritability\tdesired_h2\tmaf1\tmaf2\tsample_size1\tsample_size2\tld\tparams\tnpairs\tmethod\tnum_missing\tnum_significant\n"
 
-    def params_str(self):
-        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}".format(
-                heritability( self.model, self.params, self.maf, self.dispersion ),
+    def params_str(self, info):
+        ld = 0.0
+        if self.ld:
+            ld = self.ld
+
+        return "\"{0}\"\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}".format(
+                self.name,
+                info[ "heritability" ],
                 self.desired_h2,
                 self.maf[ 0 ],
                 self.maf[ 1 ],
                 self.sample_size[ 0 ],
                 self.sample_size[ 1 ],
+                ld,
+                ",".join( map( str, self.params ) ),
                 self.num_pairs )
 
 def param_iter(experiment):
+    name = experiment.get( "name", "NA" )
     model = experiment.get( "model", "binomial" )
 
     dispersion = experiment.get( "dispersion", [ 1.0 ] )
     maf = grouper( 2, experiment.get( "maf" ) )
     num_pairs = experiment.get( "num-pairs", 100 )
+    ld = experiment.get( "ld", [ None ] )
 
     # Binary experiments specify cases and controls
     sample_size = None
@@ -90,6 +105,6 @@ def param_iter(experiment):
     else:
         params = grouper( 9, experiment.get( "param" ) )
     
-    for m, s, p, d, l in product( maf, sample_size, params, dispersion, link ):
-        yield GenoExperiment( m, s, model, p, d, num_pairs, l )
+    for m, s, p, d, l, lewd in product( maf, sample_size, params, dispersion, link, ld ):
+        yield GenoExperiment( m, s, model, p, d, num_pairs, l, ld = lewd, name = name )
 

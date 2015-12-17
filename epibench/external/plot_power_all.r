@@ -60,12 +60,13 @@ method_power = read.table( experiment_file, header = TRUE )
 method_power$power = method_power$num_significant / ( method_power$npairs - method_power$num_missing )
 method_power$power[ method_power$num_missing == method_power$npairs ] = 0.0
 
-pdf( output_file, width = 2 * 6.7, height = 2 * 6.7 / 1.618 )
+pdf( output_file, width = 2 * 6.7, height = 2 * 6.7 / 1.618, family = "Times" )
 
+cbPalette = c( "#000000", "#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7", "#F0E442" )
 p = ggplot( method_power, aes( x = power, colour = method ) ) + stat_ecdf_reversed( geom = "smooth" ) + facet_grid( sample_size1 ~ maf1, scales = "free_x" ) +
     scale_x_continuous( "t" ) +
     scale_y_continuous( "Fraction of models with power >= t", limits = c( 0.0, 1.0 ) ) +
-    scale_color_discrete( "Method" )
+    scale_color_manual( "Method", values = cbPalette )
 
 z <- ggplot_gtable(ggplot_build(p))
 
@@ -92,3 +93,4 @@ z <- gtable_add_rows(z, unit(1/8, "line"), 3)
 grid.draw(z)
 
 dev.off( )
+embedFonts( output_file )

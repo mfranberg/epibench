@@ -9,7 +9,7 @@ def num_significant(output_path, alpha, num_tests):
 
     threshold1 = 1.0
     if num_tests != 0:
-        threshold1 = alpha / num_tests
+        threshold1 = alpha / ( 4.0 * num_tests )
 
     with open( output_path ) as output_file:
         next( output_file ) # Skip header
@@ -29,8 +29,8 @@ def num_significant(output_path, alpha, num_tests):
                 pvalue1 = float( column[ 4 ] )
                 pvalue2 = float( column[ 7 ] )
 
-                if pvalue1 <= threshold1 and pvalue2 <= alpha:
-                    significant.add( ( snp1, snp2, pvalue2 ) )
+                if pvalue1 <= threshold1 and pvalue2 <= threshold1:
+                    significant.add( ( snp1, snp2 ) )
             except ValueError:
                 continue
 

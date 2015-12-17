@@ -62,9 +62,9 @@ class PhenoExperiment:
 
         subprocess.check_call( cmd )
 
-        return InputFiles( input_plink, input_plink + ".pair", pheno_path = pheno_path )
+        return InputFiles( input_plink, input_plink + ".pair", pheno_path = pheno_path, info_path = input_plink + ".info" )
 
-    def write_results(self, method_results, result_file):
+    def write_results(self, info, method_results, result_file):
         for name, significant in method_results:
             result_file.write( "{0}\t{1}\t\"{2}\"\t{3}\n".format( self.replicate, self.effect_level, name, len( significant[ 0 ] ) ) )
 

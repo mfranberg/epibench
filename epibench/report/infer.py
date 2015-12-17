@@ -33,6 +33,37 @@ def num_significant_bonferroni(output_path, column, alpha, num_tests, missing = 
 
         return list( filter( lambda x: x[ 2 ] <= threshold, values ) ), num_missing
 
+def num_significant_multiple_bonferroni(output_path, columns, alpha, num_tests, missing = "NA"):
+    value_list = list( )
+    num_missing = 0
+    threshold = alpha / ( len( columns ) * num_tests )
+    with open( output_path, "r" ) as output_file:
+        for line in output_file:
+            column_list = line.strip( ).split( )
+            
+            one_ok = False
+            any_missing = False
+            for c in columns:
+                if column_list[ c ] == missing:
+                    any_missing = True
+                    continue
+
+                value = 0.0
+                try:
+                    value =  float( column_list[ c ] )
+                    one_ok = True
+                except:
+                    continue
+
+                if value <= threshold:
+                    value_list.append( ( column_list[ 0 ], column_list[ 1 ], value ) )
+                    break
+
+            if not one_ok and any_missing:
+                num_missing += 1
+
+    return value_list, num_missing
+
 def num_significant_threshold(output_path, column, threshold, missing = "NA"):
     with open( output_path, "r" ) as output_file:
         values, num_missing = read_significance_value_from_file( output_file, column )

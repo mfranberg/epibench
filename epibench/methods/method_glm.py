@@ -21,15 +21,28 @@ from epibench.report import infer
 #                   during the analysis.
 #
 def find_significant(method_params, experiment_params, input_files, output_dir):
-    scale = method_params.get( "scale", "logistic" )
+    model = method_params.get( "model", "binomial" )
+    default_scale = "logit"
+    if model == "normal":
+        default_scale = "identity"
+
+    scale = method_params.get( "scale", default_scale )
     factor = method_params.get( "factor", "factor" )
 
     cmd = [ "besiq",
             "glm",
+            "-m", model,
             "-l", scale,
             "-f", factor,
             input_files.pair_path,
             input_files.plink_prefix ]
+    if factor == "separate":
+        cmd = [ "besiq",
+                "separate",
+                "-l", scale,
+                "-m", model,
+                input_files.pair_path,
+                input_files.plink_prefix ]
 
     if input_files.cov_path:
         cmd.extend( [ "-c", input_files.cov_path ] )
@@ -46,4 +59,8 @@ def find_significant(method_params, experiment_params, input_files, output_dir):
     alpha = method_params.get( "alpha", 0.05 )
     num_tests = method_params.get( "num-tests", 1 )
 
-    return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )
+    if factor != "separate":
+        return infer.num_significant_bonferroni( output_path, 3, alpha, num_tests )
+    else:
+        return infer.num_significant_multiple_bonferroni( output_path, [3,5,7,9], alpha, num_tests )
+
